@@ -1,0 +1,21 @@
+#! /bin/bash
+
+if [ $# -lt 2 ]
+  then
+      echo "Usage $0 <driver_class> <sql_statements> [output_file]"
+	  echo -e "\toutput_file is optional"
+	  echo -e "Example:\n $0 ~/mysql-connector-java-5.1.27-bin.jar \"SHOW TABELS;\""
+	  exit 1
+fi
+
+driver_class=$1
+sql_stmt=$2
+output_file=$3
+
+if [ $# -lt 3 ]
+	then
+		java -cp $driver_class:db-manager.jar Main "$sql_stmt"
+else
+		java -cp $driver_class:db-manager.jar Main "$sql_stmt" $output_file
+fi
+
