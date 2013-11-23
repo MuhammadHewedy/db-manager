@@ -37,14 +37,10 @@ public class Result implements Serializable {
 			ResultType resultType = getResultType();
 			if (resultType != null) {
 				if (resultType == ResultType.UPDATE) {
-					writeString(out, this.resultCount + " rows updated.\n");
+					writeString(out, this.resultCount + "rows affected.\n");
 				} else {
 					try {
-						// if (this.resultSet.next()) {
 						writeReusltSet(out);
-						// } else {
-						// writeString(out, "No results found.\n");
-						// }
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
@@ -68,14 +64,36 @@ public class Result implements Serializable {
 	private void writeReusltSet(OutputStream out) throws SQLException {
 		int colsCount = this.resultSet.getMetaData().getColumnCount();
 
-		for (int i = 1; i <= colsCount; i++) {
-			writeString(out, this.resultSet.getMetaData().getColumnName(i)
-					+ "|");
-		}
+		writeColumnHeaders(out, colsCount);
+		writeDashs(out, colsCount);
+
 		while (resultSet.next()) {
 			for (int i = 1; i <= colsCount; i++) {
 				writeString(out, resultSet.getObject(i) + "|");
 			}
+			writeString(out, "\n");
+		}
+		writeString(out, "\n");
+	}
+
+	private void writeColumnHeaders(OutputStream out, int colsCount)
+			throws SQLException {
+		for (int i = 1; i <= colsCount; i++) {
+			writeString(out, this.resultSet.getMetaData().getColumnName(i)
+					+ "|");
+		}
+		writeString(out, "\n");
+	}
+
+	private void writeDashs(OutputStream out, int colsCount)
+			throws SQLException {
+
+		for (int i = 1; i <= colsCount; i++) {
+			writeString(
+					out,
+					Util.dashs(this.resultSet.getMetaData().getColumnName(i)
+							.length())
+							+ "|");
 		}
 		writeString(out, "\n");
 	}

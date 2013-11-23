@@ -8,7 +8,7 @@ import java.sql.Statement;
 
 public abstract class Query {
 
-	private final static String RESULT_QUERY_PREFIX = "SELECT";
+	private final static String[] RESULT_QUERY_PREFIX = { "SELECT", "SHOW" };
 
 	private Connection connection;
 	protected Statement statement;
@@ -37,7 +37,7 @@ public abstract class Query {
 			final String sqlQuery) {
 		if (sqlQuery != null) {
 			Query query = null;
-			if (sqlQuery.startsWith(RESULT_QUERY_PREFIX)) {
+			if (Util.startsWith(sqlQuery, RESULT_QUERY_PREFIX)) {
 				query = new ResultQuery(connUrl, username, passwd, sqlQuery);
 			} else {
 				query = new UpdateQuery(connUrl, username, passwd, sqlQuery);
